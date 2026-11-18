@@ -28,7 +28,7 @@
     if (self) {
         _pdfData = [pdfData copy];
         _currentPage = 0;
-        CGDataProviderRef provider = CGDataProviderCreateWithCFData((CFDataRef)_pdfData);
+        CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)_pdfData);
         if (provider) {
             _doc = CGPDFDocumentCreateWithProvider(provider);
             CGDataProviderRelease(provider);
