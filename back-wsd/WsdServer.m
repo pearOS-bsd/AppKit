@@ -11,11 +11,11 @@
 #include <AppKit/NSWindow.h>
 #include <signal.h>
 #import <GNUstepGUI/GSTheme.h>
-#import "wsd/WsdMacTheme.h"
+#import "WindowServer/WsdMacTheme.h"
 
-#include "wsd/WsdServer.h"
+#include "WindowServer/WsdServer.h"
 #define WLOG(...) do { if (getenv("WSD_DEBUG")) NSLog(@"wsd-back: " __VA_ARGS__); } while (0)
-#include "wsd/WsdCairoSurface.h"
+#include "WindowServer/WsdCairoSurface.h"
 
 /* CGKeyCode -> characters for an ANSI layout (unshifted, shifted) */
 static const char *keymap[128][2] = {
@@ -28,7 +28,7 @@ static const char *keymap[128][2] = {
 };
 
 #ifdef WSD_XKB
-#include "wsd/ws_xkb.h"
+#include "WindowServer/ws_xkb.h"
 #endif
 
 /* the keys without a character: AppKit expects the private-use function-key characters (NSUpArrowFunctionKey ...) */
@@ -87,7 +87,7 @@ extern BOOL WsdAppearanceIsDark(void);
 
 + (void) initializeBackend
 {
-	NSDebugLog(@"Initializing GNUstep wsd backend.\n");
+	NSDebugLog(@"Initializing GNUstep WindowServer backend.\n");
 	[GSDisplayServer setDefaultServerClass: [WsdServer class]];
 	signal(SIGTERM, terminate);
 	signal(SIGINT, terminate);
@@ -99,7 +99,7 @@ extern BOOL WsdAppearanceIsDark(void);
 	if (self == nil) return nil;
 	conn = ws_connect(NULL);
 	if (conn == NULL) {
-		NSLog(@"wsd backend: cannot connect to the window server (WS_SOCKET=%s)", getenv("WS_SOCKET") ? getenv("WS_SOCKET") : "default");
+		NSLog(@"WindowServer backend: cannot connect to the window server (WS_SOCKET=%s)", getenv("WS_SOCKET") ? getenv("WS_SOCKET") : "default");
 		[self release];
 		return nil;
 	}
@@ -124,7 +124,7 @@ extern BOOL WsdAppearanceIsDark(void);
 	return NULL;
 }
 
-/* wsd has no window manager: AppKit draws its own title bars and borders (client-side decorations) and moves/resizes the window itself */
+/* WindowServer has no window manager: AppKit draws its own title bars and borders (client-side decorations) and moves/resizes the window itself */
 - (BOOL) handlesWindowDecorations { return NO; }
 
 /* ---- screen ---- */

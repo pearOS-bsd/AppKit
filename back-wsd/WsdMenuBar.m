@@ -11,7 +11,7 @@
 #include <string.h>
 
 extern BOOL WsdBarWantsLightText(void);
-static NSString *const kPearItem = @"wsd.pear";
+static NSString *const kPearItem = @"WindowServer.pear";
 
 /* the pear (pearos-settings, usr/share/extras/pearlogo.svg, one path): 0 move, 1 line, 2 curve, 3 close; the box of the path is x 18.05 .. 201.54, y 3.27 .. 292.57 */
 static const double kPear[][7] = {

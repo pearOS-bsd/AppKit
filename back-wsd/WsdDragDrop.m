@@ -5,8 +5,8 @@
 #import <GNUstepGUI/GSDisplayServer.h>
 #import <GNUstepGUI/GSDragView.h>
 #import <objc/runtime.h>
-#include "wsd/WsdServer.h"
-#include "wsd/WsdMacTheme.h"
+#include "WindowServer/WsdServer.h"
+#include "WindowServer/WsdMacTheme.h"
 #include "ws_client.h"
 
 #define WDND 0x574e4457u                                       /* the notification type */

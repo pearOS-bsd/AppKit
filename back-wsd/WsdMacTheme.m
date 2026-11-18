@@ -12,7 +12,7 @@ static void wsdTFRect(id self, SEL _cmd, NSRect r);
 #import <objc/runtime.h>
 #include <math.h>
 #include <string.h>
-#import "wsd/WsdMacTheme.h"
+#import "WindowServer/WsdMacTheme.h"
 
 /* WSD_APPEARANCE=light switches the palette; the measurements are of the dark appearance (the light one is typical macOS, not measured) */
 static void wsdMenuSizeToFit(id self, SEL _cmd); static NSColor *wsdMenuTextColor(id self, SEL _cmd); static void wsdMenuDrawKeyEq(id self, SEL _cmd, NSRect f, NSView *v); static void wsdMenuDrawState(id self, SEL _cmd, NSRect f, NSView *v);
@@ -43,7 +43,7 @@ static void applyFonts(void)
 	if (getenv("WSD_DEBUG")) {
 		NSMutableArray *inter = [NSMutableArray array];
 		for (NSString *n in [[NSFontManager sharedFontManager] availableFonts]) if ([n rangeOfString: @"Inter" options: NSCaseInsensitiveSearch].location != NSNotFound) [inter addObject: n];
-		NSLog(@"wsd fonts: regular=%@ bold=%@ available=%lu inter=%@ first=%@", r, b, (unsigned long)[[[NSFontManager sharedFontManager] availableFonts] count], inter, [[[NSFontManager sharedFontManager] availableFonts] subarrayWithRange: NSMakeRange(0, MIN(6, [[[NSFontManager sharedFontManager] availableFonts] count]))]);
+		NSLog(@"WindowServer fonts: regular=%@ bold=%@ available=%lu inter=%@ first=%@", r, b, (unsigned long)[[[NSFontManager sharedFontManager] availableFonts] count], inter, [[[NSFontManager sharedFontManager] availableFonts] subarrayWithRange: NSMakeRange(0, MIN(6, [[[NSFontManager sharedFontManager] availableFonts] count]))]);
 	}
 	NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
 	if (r) for (NSString *k in @[@"NSFont", @"NSUserFont", @"NSControlContentFont", @"NSLabelFont", @"NSMessageFont", @"NSMenuFont", @"NSPaletteFont", @"NSToolTipsFont"]) [d setObject: r forKey: k];
@@ -127,7 +127,7 @@ static void installControlImages(void)
 			if (old) [old setName: nil];
 			NSImage *nu = controlImage(radio[i], on[i]);
 			BOOL ok = [nu setName: real];
-			if (getenv("WSD_DEBUG")) NSLog(@"wsd control image %@ -> %@ replaced=%d named=%d", keys[i], real, old != nil, ok);
+			if (getenv("WSD_DEBUG")) NSLog(@"WindowServer control image %@ -> %@ replaced=%d named=%d", keys[i], real, old != nil, ok);
 		}
 		{ NSImage *old = [NSImage imageNamed: @"NSComboArrow"]; NSString *real = old && [old name] ? [[old name] copy] : @"NSComboArrow"; if (old) [old setName: nil]; [comboChevron() setName: real]; }
 		for (NSString *nm in @[@"common_Nibble", @"common_3DArrowDown", @"common_ret", @"common_retH", @"NSMenuArrow", @"NSHighlightedMenuArrow", @"common_3DArrowRight", @"common_3DArrowRightH"]) {              /* the stock pop-up arrows are blanked: the theme draws the chevrons */
@@ -141,11 +141,11 @@ static void installControlImages(void)
 			for (int i = 0; i < 4; i++) {
 				NSImage *im = [NSImage imageNamed: names[i]];
 				NSData *t = [im TIFFRepresentation];
-				NSLog(@"wsd image %@: size %@ tiff %lu bytes", names[i], NSStringFromSize([im size]), (unsigned long)[t length]);
+				NSLog(@"WindowServer image %@: size %@ tiff %lu bytes", names[i], NSStringFromSize([im size]), (unsigned long)[t length]);
 				[t writeToFile: [NSString stringWithFormat: @"%s/wsd-%@.tiff", dump, names[i]] atomically: YES];
 			}
 		}
-	} @catch (NSException *e) { NSLog(@"wsd theme: control images: %@", e); }
+	} @catch (NSException *e) { NSLog(@"WindowServer theme: control images: %@", e); }
 }
 
 /* GNUstep's table views start with solid grid lines and 16 pt rows; Cocoa's have no grid and 24 pt rows */
@@ -498,7 +498,7 @@ static void swizzleTableDefaults(void)
 void WsdApplyMacPalette(void)
 {
 	swizzleTableDefaults();
-	@try { applyFonts(); } @catch (NSException *e) { NSLog(@"wsd theme: fonts: %@", e); }
+	@try { applyFonts(); } @catch (NSException *e) { NSLog(@"WindowServer theme: fonts: %@", e); }
 	int r, g, b; windowBG(&r, &g, &b); BOOL dark = isDark(); int fg = dark ? 255 : 0;
 	NSColorList *l = [NSColorList colorListNamed: @"System"];
 	if (!l) return;

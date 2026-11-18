@@ -207,7 +207,7 @@ void WsdShowTilePopover(NSWindow *w, NSRect buttonInWindow)
 {
 	@try { [self wsdGuardedAutodisplay]; }
 	@catch (NSException *e) {
-		static int n; if (n++ < 5) NSLog(@"wsd: drawing %@ raised %@: %@", [self class], [e name], [e reason]);
+		static int n; if (n++ < 5) NSLog(@"WindowServer: drawing %@ raised %@: %@", [self class], [e name], [e reason]);
 		@try { [self enableFlushWindow]; [self flushWindowIfNeeded]; } @catch (NSException *e2) {}
 	}
 }

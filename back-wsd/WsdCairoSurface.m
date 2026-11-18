@@ -1,6 +1,6 @@
 #include "config.h"
-#include "wsd/WsdServer.h"
-#include "wsd/WsdCairoSurface.h"
+#include "WindowServer/WsdServer.h"
+#include "WindowServer/WsdCairoSurface.h"
 #include <cairo/cairo.h>
 
 @implementation WsdCairoSurface
