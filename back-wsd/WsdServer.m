@@ -104,6 +104,8 @@ extern BOOL WsdAppearanceIsDark(void);
 		return nil;
 	}
 	if (ws_conn_screen(conn, &screenW, &screenH)) { screenW = 1280; screenH = 800; }
+	/* the display can change while the application runs (a VM window resized, a monitor plugged): the application is told as on a Mac (NSApplicationDidChangeScreenParametersNotification, NSScreen re-read) */
+	[NSTimer scheduledTimerWithTimeInterval: 0.5 target: self selector: @selector(wsdCheckScreen:) userInfo: nil repeats: YES];
 	int fd = ws_conn_event_fd(conn);
 	WLOG(@"event fd %d", fd);
 	NSRunLoop *rl = [NSRunLoop currentRunLoop];
@@ -128,6 +130,14 @@ extern BOOL WsdAppearanceIsDark(void);
 - (BOOL) handlesWindowDecorations { return NO; }
 
 /* ---- screen ---- */
+- (void) wsdCheckScreen: (NSTimer *)t
+{
+	int w = 0, h = 0;
+	if (ws_conn_screen(conn, &w, &h) != 0 || w <= 0 || h <= 0 || (w == screenW && h == screenH)) return;
+	screenW = w; screenH = h;
+	[NSScreen resetScreens];
+	[[NSNotificationCenter defaultCenter] postNotificationName: NSApplicationDidChangeScreenParametersNotification object: NSApp];
+}
 - (NSArray *) screenList { return [NSArray arrayWithObject: [NSNumber numberWithInt: 0]]; }
 - (NSRect) boundsForScreen: (int)screen { return NSMakeRect(0, 0, screenW, screenH); }
 - (NSWindowDepth) windowDepthForScreen: (int)screen { return (NSWindowDepth)(0x100 | 8); }
