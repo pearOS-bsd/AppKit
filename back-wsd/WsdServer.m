@@ -136,6 +136,8 @@ extern BOOL WsdAppearanceIsDark(void);
 	if (ws_conn_screen(conn, &w, &h) != 0 || w <= 0 || h <= 0 || (w == screenW && h == screenH)) return;
 	screenW = w; screenH = h;
 	[NSScreen resetScreens];
+	{ NSWindow *mw = [[NSApp mainMenu] window];	/* the menu bar window stays at the top and as wide as the screen */
+	  if (mw) { NSRect f = [mw frame]; f.size.width = w; f.origin.x = 0; f.origin.y = h - f.size.height; [mw setFrame: f display: YES]; } }
 	[[NSNotificationCenter defaultCenter] postNotificationName: NSApplicationDidChangeScreenParametersNotification object: NSApp];
 }
 - (NSArray *) screenList { return [NSArray arrayWithObject: [NSNumber numberWithInt: 0]]; }
